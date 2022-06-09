@@ -10,12 +10,6 @@ import (
 func main() {
 	rootCmd := NewRootCmd()
 	rootCmd.AddCommand(Level2Cmd())
-	rootCmd.SilenceErrors = true
-	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		// Disable Cobra's default behavior to print command help text on run-time errors.
-		cmd.SilenceUsage = true
-	}
-
 	err := rootCmd.Execute()
 	fmt.Println(err)
 }
@@ -35,7 +29,7 @@ func Level2Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "level-2",
 		ValidArgs: []string{
-			"check-key",
+			"level-3",
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cmd.Help()
@@ -48,7 +42,7 @@ func Level2Cmd() *cobra.Command {
 
 func Level3Cmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "check-key",
+		Use: "level-3",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cmd.Help()
 		},
@@ -85,7 +79,7 @@ func OnlyValidArgs(cmd *cobra.Command, args []string) error {
 
 		for _, v := range args {
 			if !stringInSlice(v, validArgs) {
-				fmt.Println("HERE:", v, args[0])
+				fmt.Println("HERE:", v, args, args[0])
 				return fmt.Errorf("invalid argument %q for %q%s", v, cmd.CommandPath(), findSuggestions(cmd, args[0]))
 			}
 		}
